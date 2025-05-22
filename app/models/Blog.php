@@ -1,31 +1,36 @@
 <?php
 namespace App\Models;
 
-use App\Core\Model;
-use App\Core\Crud;
+use App\Helpers\DBHelper;
 
-class Blog extends Model {
-    protected $crud;
+class Blog {
     protected $table = 'blogs';
     protected $prefix = 'pf_';
-    public function __construct() {
-        parent::__construct();
-        $this->crud = new Crud($this->db->pdo, $this->prefix);
-    }
+
     public function create($data) {
-        return $this->crud->create($this->table, $data);
+        return DBHelper::table($this->prefix . $this->table)
+            ->insert($data);
     }
+
     public function getAll() {
-        return $this->crud->read($this->table);
+        return DBHelper::table($this->prefix . $this->table)->get();
     }
-    public function find($id) {
-        $result = $this->crud->read($this->table, 'id = ?', [$id]);
-        return $result ? $result[0] : null;
+
+    public function findById($id) {
+        return DBHelper::table($this->prefix . $this->table)
+            ->where('id = ?', [$id])
+            ->first();
     }
+
     public function updateById($id, $data) {
-        return $this->crud->update($this->table, $data, 'id = ?', [$id]);
+        return DBHelper::table($this->prefix . $this->table)
+            ->where('id = ?', [$id])
+            ->update($data);
     }
+
     public function deleteById($id) {
-        return $this->crud->delete($this->table, 'id = ?', [$id]);
+        return DBHelper::table($this->prefix . $this->table)
+            ->where('id = ?', [$id])
+            ->delete();
     }
 } 
