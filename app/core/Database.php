@@ -18,4 +18,4 @@ class Database {
             die("DB Connection failed: " . $e->getMessage());
         }
     }
-} 
+}
